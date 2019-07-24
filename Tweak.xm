@@ -1,34 +1,34 @@
-/* How to Hook with Logos
-Hooks are written with syntax similar to that of an Objective-C @implementation.
-You don't need to #include <substrate.h>, it will be done automatically, as will
-the generation of a class list and an automatic constructor.
+@interface _UIBatteryView : UIView
 
-%hook ClassName
+@property (nonatomic,retain) CAShapeLayer * bodyLayer; 
+@property (nonatomic,retain) CAShapeLayer * pinLayer;
 
-// Hooking a class method
-+ (id)sharedInstance {
-	return %orig;
+@end
+
+
+%hook _UIBatteryView
+
+-(void)layoutSubviews {
+	%orig;
+	[self.pinLayer setPath:[[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 10, 10)] CGPath]];
+	self.bodyLayer.sublayers = nil;
+	CGMutablePathRef thePath = CGPathCreateMutable();
+	CGPathAddArc(thePath, NULL, 6.7, 6.5, 5, -M_PI_2, M_PI_2*3, NO);
+	CGPathCloseSubpath(thePath);
+	
+	[self.bodyLayer setPath:thePath];
+	CAShapeLayer *percentCharge = [[CAShapeLayer alloc] init];
+	[percentCharge setPath:thePath];
+	self.bodyLayer.lineWidth = 2;
+	self.bodyLayer.fillColor = [UIColor clearColor].CGColor;
+	self.bodyLayer.backgroundColor = [UIColor clearColor].CGColor;
+	percentCharge.lineWidth = 2;
+	percentCharge.fillColor = [UIColor clearColor].CGColor;
+	percentCharge.backgroundColor = [UIColor clearColor].CGColor;
+	percentCharge.strokeColor = [UIColor whiteColor].CGColor;
+	percentCharge.strokeStart = 0;
+	percentCharge.strokeEnd = 0.5;
+	[self.bodyLayer addSublayer:percentCharge];
 }
 
-// Hooking an instance method with an argument.
-- (void)messageName:(int)argument {
-	%log; // Write a message about this call, including its class, name and arguments, to the system log.
-
-	%orig; // Call through to the original function with its original arguments.
-	%orig(nil); // Call through to the original function with a custom argument.
-
-	// If you use %orig(), you MUST supply all arguments (except for self and _cmd, the automatically generated ones.)
-}
-
-// Hooking an instance method with no arguments.
-- (id)noArguments {
-	%log;
-	id awesome = %orig;
-	[awesome doSomethingElse];
-
-	return awesome;
-}
-
-// Always make sure you clean up after yourself; Not doing so could have grave consequences!
 %end
-*/
