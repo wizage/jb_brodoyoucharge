@@ -1,9 +1,9 @@
 Package: com.wizage.bducharge
 Name: BroDoYouCharge
 Depends: mobilesubstrate
-Version: 0.0.1
+Version: 1.0.0
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Let's change up the way we look at the charging bolt
 Maintainer: wizages <wizagesmax@gmail.com>
 Author: wizages <wizagesmax@gmail.com>
 Section: Tweaks
