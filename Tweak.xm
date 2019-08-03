@@ -23,6 +23,15 @@
 	[self.bodyLayer addSublayer:self.batteryLayer];
 }
 
+-(void)_updateFillLayer{
+	%orig;
+	self.batteryLayer.strokeEnd = float(self.chargePercent);
+}
+
+-(void)_updatePercentage{
+	%orig;
+	self.batteryLayer.strokeEnd = float(self.chargePercent);
+}
 
 -(void)_updateFillColor{
 	/*
@@ -43,6 +52,9 @@
 		return original;
 	}
 }
+
+
+
 
 -(UIColor *) bodyColor {
 	/*
